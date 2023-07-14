@@ -9,9 +9,9 @@ import java.time.LocalDateTime;
 public class CategoryDTO {
     private Integer id;
     private Integer key;
-    private String name_uz;
-    private String name_ru;
-    private String name_en;
+    private String nameUz;
+    private String nameRu;
+    private String nameEng;
     private Boolean visible;
-    private LocalDateTime created_date;
+    private LocalDateTime createdDate;
 }

@@ -17,6 +17,6 @@ public class ProfileDTO {
     private Enum status;
     private Enum role;
     private Boolean visible;
-    private LocalDateTime created_date;
+    private LocalDateTime createdDate;
     private URL photoId;
 }
