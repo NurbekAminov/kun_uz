@@ -1,4 +1,5 @@
 package com.example.kun_uz.enums;
 
-public class ProfileStatus {
+public enum ProfileStatus {
+    ACTIVE,NOT_ACTIVE
 }

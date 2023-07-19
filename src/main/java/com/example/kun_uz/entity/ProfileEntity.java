@@ -1,5 +1,7 @@
 package com.example.kun_uz.entity;
 
+import com.example.kun_uz.enums.ProfileRole;
+import com.example.kun_uz.enums.ProfileStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,23 +27,26 @@ public class ProfileEntity {
     private String email;
 
     @Column(name = "phone", unique = true)
-    private Integer phone;
+    private String phone;
 
     @Column(name = "password")
     private String password;
 
     @Column(name = "status")
-    private Enum status;
+    private ProfileStatus status;
 
     @Column(name = "role")
-    private Enum role;
+    private ProfileRole role;
 
     @Column(name = "visible")
-    private Boolean visible;
+    private Boolean visible = true;
 
     @Column(name = "created_date")
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @Column(name = "photo_id")
     private URL photoId;
+
+    @Column(name = "profile_id")
+    private Integer profileId;
 }

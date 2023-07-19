@@ -2,6 +2,7 @@ package com.example.kun_uz.controller;
 
 import com.example.kun_uz.dto.ProfileDTO;
 import com.example.kun_uz.dto.RegionDTO;
+import com.example.kun_uz.enums.Language;
 import com.example.kun_uz.service.RegionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,22 +29,22 @@ public class RegionController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<String> delete(@PathVariable("id") Integer id) {
-        Boolean response = regionService.delete(id);
-        if (response) {
-            return ResponseEntity.ok("Region deleted");
+    public ResponseEntity<?> deleteById(@PathVariable("id") Integer id) {
+        Boolean result = regionService.deleteById(id);
+        if (result) {
+            return ResponseEntity.ok("Region deleted!!!");
         }
-        return ResponseEntity.badRequest().body("Region Not Found");
+        return ResponseEntity.badRequest().body("Region not found");
     }
 
-    @GetMapping("/list")
+    @GetMapping("/all")
     public List<RegionDTO> all() {
         return regionService.getAll();
     }
 
-    @GetMapping(value = "/language")
-    public List<RegionDTO> getByLanguage(@RequestParam("language") String language) {
-        return regionService.getByLanguage(language);
+    @GetMapping("/lang")
+    public ResponseEntity<List<RegionDTO>> getByLan(@RequestParam(value = "lang", defaultValue = "uz") Language lang) {
+        return ResponseEntity.ok(regionService.getByLanguage(lang));
     }
 
 }

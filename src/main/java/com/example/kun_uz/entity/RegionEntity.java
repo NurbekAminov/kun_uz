@@ -12,23 +12,23 @@ import java.time.LocalDateTime;
 @Table(name = "Region")
 public class RegionEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
 
-    @Column(name = "key")
-    private Integer key;
+    @Column(name = "order_number")
+    private Integer orderNumber;
 
     @Column(name = "name_uz")
     private String nameUz;
 
+    @Column(name = "name_en")
+    private String nameEn;
+
     @Column(name = "name_ru")
     private String nameRu;
 
-    @Column(name = "name_eng")
-    private String nameEng;
-
     @Column(name = "visible")
-    private Boolean visible;
+    private Boolean visible = Boolean.TRUE;
 
     @Column(name = "created_date")
     private LocalDateTime createdDate;

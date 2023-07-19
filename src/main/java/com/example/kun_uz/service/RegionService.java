@@ -4,6 +4,7 @@ import com.example.kun_uz.dto.ProfileDTO;
 import com.example.kun_uz.dto.RegionDTO;
 import com.example.kun_uz.entity.ProfileEntity;
 import com.example.kun_uz.entity.RegionEntity;
+import com.example.kun_uz.enums.Language;
 import com.example.kun_uz.exp.ItemNotFoundException;
 import com.example.kun_uz.repository.RegionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,97 +19,81 @@ import java.util.Optional;
 public class RegionService {
     @Autowired
     private RegionRepository regionRepository;
-    public RegionDTO add(RegionDTO dto) {
-        RegionEntity entity = toEntity(dto);
 
+    public RegionDTO add(RegionDTO dto) {
+        RegionEntity entity = new RegionEntity();
+        entity.setOrderNumber(dto.getOrderNumber());
+        entity.setNameUz(dto.getNameUz());
+        entity.setNameRu(dto.getNameRu());
+        entity.setNameEn(dto.getNameEn());
+        entity.setCreatedDate(LocalDateTime.now());
         regionRepository.save(entity);
         dto.setId(entity.getId());
-
         return dto;
     }
-    public Boolean update(Integer id, RegionDTO region) {
-        int effectedRows = regionRepository.update(id, region.getKey(), region.getNameUz(), region.getNameRu(), region.getNameEng());
-        return effectedRows != 0;
+
+    public Boolean update(Integer id, RegionDTO dto) {
+        int effect = regionRepository.updateById(id, dto.getOrderNumber(),
+                dto.getNameUz(), dto.getNameRu(), dto.getNameEn());
+        return effect == 1;
     }
-    public Boolean delete(Integer id) {
-        Optional<RegionEntity> optional = regionRepository.findById(id);
-        if (optional.isEmpty()) {
-            return false;
-        }
-        regionRepository.deleteById(id);
-        return true;
+
+
+    public Boolean deleteById(Integer id) {
+        return null;
     }
+
     public List<RegionDTO> getAll() {
-        Iterable<RegionEntity> iterable = regionRepository.findAll();
+        return null;
+    }
+
+
+    public List<RegionDTO> getByLanguage(Language lang) {
         List<RegionDTO> dtoList = new LinkedList<>();
-        iterable.forEach(entity -> {
-            dtoList.add(toDTO(entity));
+        regionRepository.findAllByVisibleTrue().forEach(entity -> {
+            dtoList.add(toDTO(entity, lang));
         });
         return dtoList;
     }
-    public List<RegionDTO> getByLanguage(String language) {
-        Iterable<RegionEntity> iterable = regionRepository.findAll();
-        List<RegionDTO> dtoList = new LinkedList<>();
-        if (language.isEmpty()){
-            throw new ItemNotFoundException("language not found");
-        }
-        if (language.equals("nameUz")){
-            iterable.forEach(entity -> {
-                dtoList.add(toDTOUz(entity));
-            });
-        }else if (language.equals("nameRu")){
-            iterable.forEach(entity -> {
-                dtoList.add(toDTORu(entity));
-            });
-        }else if (language.equals("nameEng")){
-            iterable.forEach(entity -> {
-                dtoList.add(toDTOEng(entity));
-            });
-        }else throw new ItemNotFoundException("language not found");
 
+    public List<RegionDTO> getByLanguage2(Language lang) {
+        List<RegionDTO> dtoList = new LinkedList<>();
+        switch (lang) {
+            case en: {
+                dtoList = regionRepository.findAllByNameEn();
+            }
+            case uz: {
+                dtoList = regionRepository.findAllByNameUz();
+            }
+            case ru: {
+                dtoList = regionRepository.findAllByNameRu();
+            }
+        }
         return dtoList;
     }
-    public RegionEntity toEntity(RegionDTO dto) {
-        RegionEntity entity = new RegionEntity();
-        entity.setKey(dto.getKey());
-        entity.setNameUz(dto.getNameUz());
-        entity.setNameRu(dto.getNameRu());
-        entity.setNameEng(dto.getNameEng());
-        entity.setCreatedDate(LocalDateTime.now());
-        return entity;
+
+    public List<RegionDTO> getByLanguage3(Language lang) {
+        List<RegionDTO> dtoList = new LinkedList<>();
+        regionRepository.findAllByLang(lang.name()).forEach(mapper -> {
+            RegionDTO dto = new RegionDTO();
+            dto.setId(mapper.getId());
+            dto.setOrderNumber(mapper.getOrderNumber());
+            dto.setName(mapper.getName());
+            dtoList.add(dto);
+        });
+        return dtoList;
     }
-    public RegionDTO toDTO(RegionEntity entity) {
+
+    private RegionDTO toDTO(RegionEntity entity, Language lang) {
         RegionDTO dto = new RegionDTO();
         dto.setId(entity.getId());
-        dto.setKey(entity.getKey());
-        dto.setNameUz(entity.getNameUz());
-        dto.setNameRu(entity.getNameRu());
-        dto.setNameEng(entity.getNameEng());
-        dto.setCreatedDate(entity.getCreatedDate());
-        return dto;
-    }
-    public RegionDTO toDTOUz(RegionEntity entity) {
-        RegionDTO dto = new RegionDTO();
-        dto.setId(entity.getId());
-        dto.setKey(entity.getKey());
-        dto.setNameUz(entity.getNameUz());
-        dto.setCreatedDate(entity.getCreatedDate());
-        return dto;
-    }
-    public RegionDTO toDTORu(RegionEntity entity) {
-        RegionDTO dto = new RegionDTO();
-        dto.setId(entity.getId());
-        dto.setKey(entity.getKey());
-        dto.setNameRu(entity.getNameRu());
-        dto.setCreatedDate(entity.getCreatedDate());
-        return dto;
-    }
-    public RegionDTO toDTOEng(RegionEntity entity) {
-        RegionDTO dto = new RegionDTO();
-        dto.setId(entity.getId());
-        dto.setKey(entity.getKey());
-        dto.setNameEng(entity.getNameEng());
-        dto.setCreatedDate(entity.getCreatedDate());
+        dto.setOrderNumber(entity.getOrderNumber());
+        switch (lang) {
+            case en -> dto.setName(entity.getNameEn());
+            case uz -> dto.setName(entity.getNameUz());
+            case ru -> dto.setName(entity.getNameRu());
+            default -> dto.setName(entity.getNameUz());
+        }
         return dto;
     }
 }
