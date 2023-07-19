@@ -15,8 +15,8 @@ public class CategoryEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
 
-    @Column(name = "key")
-    private Integer key;
+    @Column(name = "order_number")
+    private Integer orderNumber;
 
     @Column(name = "name_uz")
     private String nameUz;
@@ -24,8 +24,8 @@ public class CategoryEntity {
     @Column(name = "name_ru")
     private String nameRu;
 
-    @Column(name = "name_eng")
-    private String nameEng;
+    @Column(name = "name_en")
+    private String nameEn;
 
     @Column(name = "visible")
     private Boolean visible;

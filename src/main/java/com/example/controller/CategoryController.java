@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.dto.CategoryDTO;
 import com.example.dto.RegionDTO;
+import com.example.enums.Language;
 import com.example.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,20 +15,20 @@ import java.util.List;
 @RequestMapping("/category")
 public class CategoryController {
     @Autowired
-    private CategoryService service;
+    private CategoryService categoryService;
 
-    @PostMapping(value = "/create")
+    @PostMapping(value = {"", "/"})
     public ResponseEntity<?> create(@RequestBody CategoryDTO category) {
-        CategoryDTO response = service.add(category);
+        CategoryDTO response = categoryService.add(category);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @PutMapping(value = "/{id}")
     public ResponseEntity<?> put(@RequestBody CategoryDTO category, @PathVariable("id") Integer id) {
-        return ResponseEntity.ok(service.update(id, category));
+        return ResponseEntity.ok(categoryService.update(id, category));
     }
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<String> delete(@PathVariable("id") Integer id) {
-        Boolean response = service.delete(id);
+        Boolean response = categoryService.delete(id);
         if (response) {
             return ResponseEntity.ok("Region deleted");
         }
@@ -35,10 +36,10 @@ public class CategoryController {
     }
     @GetMapping("/list")
     public List<CategoryDTO> all() {
-        return service.getAll();
+        return categoryService.getAll();
     }
-    @GetMapping(value = "/language")
-    public List<CategoryDTO> getByLanguage(@RequestParam("language") String language) {
-        return service.getByLanguage(language);
+    @GetMapping(value = "/lang")
+    public List<CategoryDTO> getByLanguage(@RequestParam(value = "lang", defaultValue = "uz") Language lang) {
+        return categoryService.getByLanguage2(lang);
     }
 }

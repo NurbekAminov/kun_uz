@@ -1,9 +1,11 @@
 package com.example.controller;
 
+import com.example.dto.JwtDTO;
 import com.example.dto.ProfileDTO;
+import com.example.enums.ProfileRole;
 import com.example.service.ProfileService;
+import com.example.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,15 +18,18 @@ public class ProfileController {
     private ProfileService profileService;
 
     @PostMapping(value = {"", "/"})
-    public ResponseEntity<?> create(@RequestBody ProfileDTO profileDTO) {
-        ProfileDTO response = profileService.create(profileDTO);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<?> create(@RequestBody ProfileDTO dto,
+                                    @RequestHeader("Authorization") String authToken) {
+        JwtDTO jwtDTO = SecurityUtil.hasRole(authToken, ProfileRole.ADMIN);
+        return ResponseEntity.ok(profileService.create(dto, jwtDTO.getId()));
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> put(@RequestBody ProfileDTO profile,
-                                 @PathVariable("id") Integer id) {
-        return ResponseEntity.ok(profileService.update(id, profile));
+    public ResponseEntity<Boolean> update(@RequestBody ProfileDTO dto,
+                                          @PathVariable("id") Integer id,
+                                          @RequestHeader("Authorization") String authToken) {
+        JwtDTO jwtDTO = SecurityUtil.hasRole(authToken, ProfileRole.ADMIN);
+        return ResponseEntity.ok(profileService.update(id, dto));
     }
     @PutMapping(value = "/detail/{id}")
     public ResponseEntity<Boolean> updateDetail(@RequestBody ProfileDTO dto,

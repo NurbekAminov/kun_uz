@@ -7,11 +7,8 @@ import com.example.exp.AppBadRequestException;
 import com.example.repository.ProfileRepository;
 import com.example.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,7 +17,7 @@ import java.util.stream.Collectors;
 public class ProfileService {
     @Autowired
     private ProfileRepository profileRepository;
-    public ProfileDTO create(ProfileDTO dto) {
+    public ProfileDTO create(ProfileDTO dto, Integer profileId) {
         // TODO checking
         isValidProfile(dto);
         Optional<ProfileEntity> profileByEmail = profileRepository.findByEmail(dto.getEmail());
@@ -40,6 +37,7 @@ public class ProfileService {
         entity.setPassword(MD5Util.encode(dto.getPassword()));
         entity.setStatus(ProfileStatus.ACTIVE);
         entity.setRole(dto.getRole());
+        entity.setProfileId(profileId);
         profileRepository.save(entity);
 
         dto.setId(entity.getId());

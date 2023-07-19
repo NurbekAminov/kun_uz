@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RegionService {
@@ -36,13 +37,22 @@ public class RegionService {
 
 
     public Boolean deleteById(Integer id) {
-        return null;
+        Optional<RegionEntity> optional = regionRepository.findById(id);
+        if (optional.isEmpty()) {
+            return false;
+        }
+        regionRepository.deleteById(id);
+        return true;
     }
 
     public List<RegionDTO> getAll() {
-        return null;
+        Iterable<RegionEntity> iterable = regionRepository.findAll();
+        List<RegionDTO> dtoList = new LinkedList<>();
+        iterable.forEach(entity -> {
+            dtoList.add(toDTO(entity));
+        });
+        return dtoList;
     }
-
 
     public List<RegionDTO> getByLanguage(Language lang) {
         List<RegionDTO> dtoList = new LinkedList<>();
@@ -78,6 +88,16 @@ public class RegionService {
             dtoList.add(dto);
         });
         return dtoList;
+    }
+    public RegionDTO toDTO(RegionEntity entity) {
+        RegionDTO dto = new RegionDTO();
+        dto.setId(entity.getId());
+        dto.setOrderNumber(entity.getOrderNumber());
+        dto.setNameUz(entity.getNameUz());
+        dto.setNameRu(entity.getNameRu());
+        dto.setNameEn(entity.getNameEn());
+        dto.setCreatedDate(entity.getCreatedDate());
+        return dto;
     }
 
     private RegionDTO toDTO(RegionEntity entity, Language lang) {

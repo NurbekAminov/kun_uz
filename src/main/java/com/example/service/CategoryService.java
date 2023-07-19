@@ -3,8 +3,7 @@ package com.example.service;
 import com.example.dto.CategoryDTO;
 import com.example.dto.RegionDTO;
 import com.example.entity.CategoryEntity;
-import com.example.entity.RegionEntity;
-import com.example.exp.ItemNotFoundException;
+import com.example.enums.Language;
 import com.example.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,8 +27,8 @@ public class CategoryService {
         return dto;
     }
     public Boolean update(Integer id, CategoryDTO category) {
-        int effectedRows = categoryRepository.update(id, category.getKey(), category.getNameUz(), category.getNameRu(), category.getNameEng());
-        return effectedRows != 0;
+        int effect = categoryRepository.updateById(id, category.getOrderNumber(), category.getNameUz(), category.getNameRu(), category.getNameEn());
+        return effect == 1;
     }
     public Boolean delete(Integer id) {
         Optional<CategoryEntity> optional = categoryRepository.findById(id);
@@ -47,69 +46,69 @@ public class CategoryService {
         });
         return dtoList;
     }
-    public List<CategoryDTO> getByLanguage(String language) {
-        Iterable<CategoryEntity> iterable = categoryRepository.findAll();
+    public List<CategoryDTO> getByLanguage(Language lang) {
         List<CategoryDTO> dtoList = new LinkedList<>();
-        if (language.isEmpty()){
-            throw new ItemNotFoundException("language not found");
-        }
-        if (language.equals("nameUz")){
-            iterable.forEach(entity -> {
-                dtoList.add(toDTOUz(entity));
-            });
-        }else if (language.equals("nameRu")){
-            iterable.forEach(entity -> {
-                dtoList.add(toDTORu(entity));
-            });
-        }else if (language.equals("nameEng")){
-            iterable.forEach(entity -> {
-                dtoList.add(toDTOEng(entity));
-            });
-        }else throw new ItemNotFoundException("language not found");
+        categoryRepository.findAllByVisibleTrue().forEach(entity -> {
+            dtoList.add(toDTO(entity, lang));
+        });
+        return dtoList;
+    }
 
+    public List<CategoryDTO> getByLanguage2(Language lang) {
+        List<CategoryDTO> dtoList = new LinkedList<>();
+        switch (lang) {
+            case en: {
+                dtoList = categoryRepository.findAllByNameEn();
+            }
+            case uz: {
+                dtoList = categoryRepository.findAllByNameUz();
+            }
+            case ru: {
+                dtoList = categoryRepository.findAllByNameRu();
+            }
+        }
+        return dtoList;
+    }
+    public List<CategoryDTO> getByLanguage3(Language lang) {
+        List<CategoryDTO> dtoList = new LinkedList<>();
+        categoryRepository.findAllByLang(lang.name()).forEach(mapper -> {
+            CategoryDTO dto = new CategoryDTO();
+            dto.setId(mapper.getId());
+            dto.setOrderNumber(mapper.getOrderNumber());
+            dto.setName(mapper.getName());
+            dtoList.add(dto);
+        });
         return dtoList;
     }
     public CategoryEntity toEntity(CategoryDTO dto) {
         CategoryEntity entity = new CategoryEntity();
-        entity.setKey(dto.getKey());
+        entity.setOrderNumber(dto.getOrderNumber());
         entity.setNameUz(dto.getNameUz());
         entity.setNameRu(dto.getNameRu());
-        entity.setNameEng(dto.getNameEng());
+        entity.setNameEn(dto.getNameEn());
         entity.setCreatedDate(LocalDateTime.now());
         return entity;
     }
     public CategoryDTO toDTO(CategoryEntity entity) {
         CategoryDTO dto = new CategoryDTO();
         dto.setId(entity.getId());
-        dto.setKey(entity.getKey());
+        dto.setOrderNumber(entity.getOrderNumber());
         dto.setNameUz(entity.getNameUz());
         dto.setNameRu(entity.getNameRu());
-        dto.setNameEng(entity.getNameEng());
+        dto.setNameEn(entity.getNameEn());
         dto.setCreatedDate(entity.getCreatedDate());
         return dto;
     }
-    public CategoryDTO toDTOUz(CategoryEntity entity) {
+    private CategoryDTO toDTO(CategoryEntity entity, Language lang) {
         CategoryDTO dto = new CategoryDTO();
         dto.setId(entity.getId());
-        dto.setKey(entity.getKey());
-        dto.setNameUz(entity.getNameUz());
-        dto.setCreatedDate(entity.getCreatedDate());
-        return dto;
-    }
-    public CategoryDTO toDTORu(CategoryEntity entity) {
-        CategoryDTO dto = new CategoryDTO();
-        dto.setId(entity.getId());
-        dto.setKey(entity.getKey());
-        dto.setNameRu(entity.getNameRu());
-        dto.setCreatedDate(entity.getCreatedDate());
-        return dto;
-    }
-    public CategoryDTO toDTOEng(CategoryEntity entity) {
-        CategoryDTO dto = new CategoryDTO();
-        dto.setId(entity.getId());
-        dto.setKey(entity.getKey());
-        dto.setNameEng(entity.getNameEng());
-        dto.setCreatedDate(entity.getCreatedDate());
+        dto.setOrderNumber(entity.getOrderNumber());
+        switch (lang) {
+            case en -> dto.setName(entity.getNameEn());
+            case uz -> dto.setName(entity.getNameUz());
+            case ru -> dto.setName(entity.getNameRu());
+            default -> dto.setName(entity.getNameUz());
+        }
         return dto;
     }
 }
