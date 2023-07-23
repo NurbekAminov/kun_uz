@@ -5,6 +5,7 @@ import com.example.dto.ProfileDTO;
 import com.example.enums.ProfileRole;
 import com.example.service.ProfileService;
 import com.example.util.SecurityUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,20 +29,24 @@ public class ProfileController {
     public ResponseEntity<Boolean> update(@RequestBody ProfileDTO dto,
                                           @PathVariable("id") Integer id,
                                           @RequestHeader("Authorization") String authToken) {
-        JwtDTO jwtDTO = SecurityUtil.hasRole(authToken, ProfileRole.ADMIN);
+        SecurityUtil.hasRole(authToken, ProfileRole.ADMIN);
         return ResponseEntity.ok(profileService.update(id, dto));
     }
-    @PutMapping(value = "/detail/{id}")
+    @PutMapping(value = "/detail")
     public ResponseEntity<Boolean> updateDetail(@RequestBody ProfileDTO dto,
-                                                @PathVariable("id") Integer id) {
-        return ResponseEntity.ok(profileService.updateDetail(id, dto));
+                                                @RequestHeader("Authorization") String authToken) {
+        JwtDTO jwtDTO = SecurityUtil.hasRole(authToken, null);
+        return ResponseEntity.ok(profileService.updateDetail(jwtDTO.getId(), dto));
     }
     @GetMapping(value = "")
-    public ResponseEntity<List<ProfileDTO>> getAll() {
+    public ResponseEntity<List<ProfileDTO>> getAll(@RequestHeader("Authorization") String authToken) {
+        SecurityUtil.hasRole(authToken, ProfileRole.ADMIN);
         return ResponseEntity.ok(profileService.getList());
     }
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable("id") Integer id) {
+    public ResponseEntity<Boolean> delete(@PathVariable("id") Integer id,
+                                          @RequestHeader("Authorization") String authToken) {
+        SecurityUtil.hasRole(authToken, ProfileRole.ADMIN);
         return ResponseEntity.ok(profileService.delete(id));
     }
 

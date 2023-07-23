@@ -44,8 +44,8 @@ public class ProfileEntity {
     @Column(name = "created_date")
     private LocalDateTime createdDate = LocalDateTime.now();
 
-    @Column(name = "photo_id")
-    private URL photoId;
+//    @Column(name = "photo_id")
+//    private Integer photoId;
 
     @Column(name = "profile_id")
     private Integer profileId;

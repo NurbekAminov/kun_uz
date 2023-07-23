@@ -22,6 +22,6 @@ public class ProfileDTO {
     private ProfileRole role;
     private Boolean visible;
     private LocalDateTime createdDate;
-    private URL photoId;
+//    private Integer photoId;
     private String jwt;
 }

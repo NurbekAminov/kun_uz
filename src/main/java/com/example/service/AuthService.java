@@ -32,7 +32,6 @@ public class AuthService {
         }
 
         ProfileDTO response = new ProfileDTO();
-        response.setId(profileEntity.getId());
         response.setName(profileEntity.getName());
         response.setSurname(profileEntity.getSurname());
         response.setRole(profileEntity.getRole());
