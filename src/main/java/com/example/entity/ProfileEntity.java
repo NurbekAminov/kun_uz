@@ -12,10 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "profile")
-public class ProfileEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class ProfileEntity extends BaseEntity{
 
     @Column(name = "name")
     private String name;
@@ -37,12 +34,6 @@ public class ProfileEntity {
 
     @Column(name = "role")
     private ProfileRole role;
-
-    @Column(name = "visible")
-    private Boolean visible = true;
-
-    @Column(name = "created_date")
-    private LocalDateTime createdDate = LocalDateTime.now();
 
 //    @Column(name = "photo_id")
 //    private Integer photoId;

@@ -1,34 +1,26 @@
 package com.example.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
 @Table(name = "articleType")
-public class ArticleTypeEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer id;
+public class ArticleTypeEntity extends BaseEntity {
 
-    @Column(name = "order_number")
-    private Integer orderNumber;
-
-    @Column(name = "name_uz")
+    @Column(name = "name_uz", nullable = false, unique = true)
     private String nameUz;
 
-    @Column(name = "name_en")
-    private String nameEn;
-
-    @Column(name = "name_ru")
+    @Column(name = "name_ru", nullable = false, unique = true)
     private String nameRu;
 
-    @Column(name = "visible")
-    private Boolean visible = Boolean.TRUE;
+    @Column(name = "name_en", nullable = false, unique = true)
+    private String nameEn;
 
-    @Column(name = "created_date")
-    private LocalDateTime createdDate;
+    @Column
+    private Integer prtId;
 }

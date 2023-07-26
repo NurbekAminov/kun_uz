@@ -1,0 +1,14 @@
+### Create region
+POST localhost:8080/api/v1/region/admin
+Content-Type:  application/json
+
+{
+  "orderNumber": 4,
+  "nameEn": "Samarqand en",
+  "nameRu": "Samarqand ru",
+  "nameUz": "Samarqand uz"
+}
+
+
+### Get All
+GET localhost:8080/api/v1/region/lang?lang=ru

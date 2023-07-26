@@ -1,0 +1,40 @@
+### Create pofile
+POST localhost:8080/api/v1/profile
+Content-Type:  application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2ODk3OTE4MzUsImlkIjoyLCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODk3OTU0MzUsImlzcyI6Imt1bnV6IHRlc3QgcG9ydGFsaSJ9.SUbPB6IjhwVho9T42N4lbFGHkUQ87-R3_PG-_NuCTTV5o06uJRHdCyD_uUYqFDk2O-Fl_ODFwI8s2vfi8pTXFQ
+
+{
+  "name": "Valish",
+  "surname": "Aliyev",
+  "email": "12345@mail.ru",
+  "phone": "12345645",
+  "role": "MODERATOR",
+  "password": "12345"
+}
+
+
+### Update pofile by id
+PUT localhost:8080/api/v1/profile/1
+Content-Type:  application/json
+
+{
+  "name": "Alijon2",
+  "surname": "Aliyev",
+  "email": "123@mail.ru"
+}
+
+
+### Update pofile detail
+GET localhost:8080/api/v1/profile/detail
+Content-Type:  application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2ODk3ODU0NjAsImlkIjoyLCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODk3ODkwNjAsImlzcyI6Imt1bnV6IHRlc3QgcG9ydGFsaSJ9.cDFNQmMeSE9QQJOmj8ddlkeUQWiWpgQLJmoP8KHfjuQd_im-AizOIwVWliGn-fTyonuJRhJ8iLNVJ0gyWp4T_A
+
+
+{
+  "name": "Adminjon",
+  "surname": "Valiyev"
+}
+
+
+
+
