@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.service.AttachService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,5 +30,9 @@ public class AttachController {
     @GetMapping(value = "/open/{id}/general", produces = MediaType.ALL_VALUE)
     public byte[] openByIdGeneral(@PathVariable("id") String id) {
         return attachService.loadByIdGeneral(id);
+    }
+    @GetMapping("/download/{id}")
+    public ResponseEntity<Resource> download(@PathVariable("id") String id) {
+        return attachService.download(id);
     }
 }

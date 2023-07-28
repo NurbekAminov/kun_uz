@@ -1,5 +1,7 @@
 package com.example.entity;
 
+import com.example.entity.base.BaseEntity;
+import com.example.entity.base.SequencesBaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -10,7 +12,9 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "articleType")
-public class ArticleTypeEntity extends BaseEntity {
+public class ArticleTypeEntity extends SequencesBaseEntity {
+    @Column(name = "order_number", nullable = false, unique = true)
+    private Integer orderNumber;
 
     @Column(name = "name_uz", nullable = false, unique = true)
     private String nameUz;

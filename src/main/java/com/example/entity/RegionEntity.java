@@ -1,16 +1,16 @@
 package com.example.entity;
 
+import com.example.entity.base.BaseEntity;
+import com.example.entity.base.SequencesBaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "region")
-public class RegionEntity extends BaseEntity{
+public class RegionEntity extends SequencesBaseEntity {
 
     @Column(name = "order_number")
     private Integer orderNumber;

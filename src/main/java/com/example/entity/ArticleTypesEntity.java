@@ -1,5 +1,6 @@
 package com.example.entity;
 
+import com.example.entity.base.IdentityBaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Entity
 @Table(name = "article_types")
-public class ArticleTypesEntity extends BaseEntity{
+public class ArticleTypesEntity extends IdentityBaseEntity {
     @Column(name = "article_id", nullable = false)
     private String articleId;
     @ManyToOne(fetch = FetchType.LAZY)

@@ -29,4 +29,5 @@ public class ArticleDTO {
     private Boolean visible;
     private Integer viewCount;
     private List<Integer> articleType;
+    private AttachDTO image;
 }

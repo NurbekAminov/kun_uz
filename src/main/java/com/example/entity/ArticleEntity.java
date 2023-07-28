@@ -1,5 +1,6 @@
 package com.example.entity;
 
+import com.example.entity.base.StringBaseEntity;
 import com.example.enums.ArticleStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "article")
-public class ArticleEntity extends BaseStringEntity {
+public class ArticleEntity extends StringBaseEntity {
 
     @Column(nullable = false, unique = true)
     private String title;

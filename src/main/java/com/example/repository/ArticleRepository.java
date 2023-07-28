@@ -15,7 +15,7 @@ public interface ArticleRepository extends CrudRepository<ArticleEntity, String>
     @Transactional
     @Modifying
     @Query("update ArticleEntity as r set r.title =:title,r.description =:description, r.content =:content, r.sharedCount =:sharedCount, r.imageId =:imageId, r.regionId =:regionId, r.categoryId =:categoryId where r.id =:id")
-    int updateById(@Param("id") String id,
+    String updateById(@Param("id") String id,
                    @Param("title") String title,
                    @Param("description") String description,
                    @Param("content") String content,
@@ -24,20 +24,19 @@ public interface ArticleRepository extends CrudRepository<ArticleEntity, String>
                    @Param("regionId") Integer region_id,
                    @Param("categoryId") Integer category_id);
 
-    @Query("from ArticleEntity as a " +
+    /*@Query("from ArticleEntity as a " +
             " inner join a.articleTypeSet as at" +
             " where at.articleTypeId =:articleTypeId  and a.status =:status and a.visible = true " +
             " order by a.publishedDate desc limit :limit")
     List<ArticleEntity> getLast5ArticleByArticleTypeId(@Param("articleTypeId") Integer articleTypeId,
                                                        @Param("status") ArticleStatus status,
-                                                       @Param("limit") int limit);
+                                                       @Param("limit") int limit);*/
 
     @Query(value = "select a.id, a.title, a.description, a.image_id, a.published_date from article as a " +
             " inner join article_types as at on at.article_id = a.id" +
             " where at.article_type_id =:articleTypeId  and a.status ='PUBLISHED' and a.visible = true " +
             " order by a.published_date desc limit :limit", nativeQuery = true)
     List<ArticleShortInfoIMapper> getLast5ArticleByArticleTypeIdNative(@Param("articleTypeId") Integer articleTypeId,
-                                                                       @Param("status") ArticleStatus status,
                                                                        @Param("limit") int limit);
 
     //9. Get Last 4 Article By Types and except given article id.

@@ -1,4 +1,4 @@
-package com.example.entity;
+package com.example.entity.base;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -9,10 +9,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @MappedSuperclass
-public class BaseStringEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+public class BaseEntity {
 
     @Column(name = "visible")
     private Boolean visible = Boolean.TRUE;

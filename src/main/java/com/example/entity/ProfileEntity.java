@@ -1,18 +1,18 @@
 package com.example.entity;
 
+import com.example.entity.base.BaseEntity;
+import com.example.entity.base.IdentityBaseEntity;
 import com.example.enums.ProfileRole;
 import com.example.enums.ProfileStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.net.URL;
-import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
 @Table(name = "profile")
-public class ProfileEntity extends BaseEntity{
+public class ProfileEntity extends IdentityBaseEntity {
 
     @Column(name = "name")
     private String name;
