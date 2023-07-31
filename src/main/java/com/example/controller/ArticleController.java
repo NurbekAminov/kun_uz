@@ -2,12 +2,12 @@ package com.example.controller;
 
 import com.example.dto.ArticleDTO;
 import com.example.dto.JwtDTO;
-import com.example.dto.ProfileDTO;
 import com.example.enums.ArticleStatus;
 import com.example.enums.ProfileRole;
 import com.example.service.ArticleService;
 import com.example.util.SecurityUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,11 +31,11 @@ public class ArticleController {
         return ResponseEntity.ok(articleService.update(id, dto, jwtDTO.getId()));
     }
 
-    /*@DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable("id") String id, HttpServletRequest request) {
         JwtDTO jwtDTO = SecurityUtil.hasRole(request, ProfileRole.MODERATOR);
         return ResponseEntity.ok(articleService.delete(id, jwtDTO.getId()));
-    }*/
+    }
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<?> changeStatus(@PathVariable("id") String id, @RequestBody ArticleDTO dto,
@@ -45,13 +45,42 @@ public class ArticleController {
     }
 
     @GetMapping(value = "/get/5")
-    public ResponseEntity<List<ArticleDTO>> getLast5(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(articleService.getLast(id, 5));
+    public ResponseEntity<List<ArticleDTO>> getLast5(@PathVariable("articleTypeId") Integer articleTypeId) {
+        return ResponseEntity.ok(articleService.getLast(articleTypeId, 5));
     }
 
     @GetMapping(value = "/get/3")
-    public ResponseEntity<List<ArticleDTO>> getLast3(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(articleService.getLast(id, 3));
+    public ResponseEntity<List<ArticleDTO>> getLast3(@PathVariable("articleTypeId") Integer articleTypeId) {
+        return ResponseEntity.ok(articleService.getLast(articleTypeId, 3));
     }
 
+    @GetMapping(value = "/get/8")
+    public ResponseEntity<List<ArticleDTO>> getLast8(@PathVariable("list") List<Integer> list) {
+        return ResponseEntity.ok(articleService.getLast8(list));
+    }
+
+    @GetMapping(value = "/get/4/notexcept")
+    public ResponseEntity<List<ArticleDTO>> getLast4NotExcept(@PathVariable("articleTypeId") Integer articleTypeId,
+                                                              @PathVariable("articleId") String articleId) {
+        return ResponseEntity.ok(articleService.getLast4NotExcept(articleId, articleTypeId));
+    }
+
+    @GetMapping(value = "/get/4/mostview")
+    public ResponseEntity<List<ArticleDTO>> getLast4MostRead() {
+        return ResponseEntity.ok(articleService.getLast4MostRead());
+    }
+
+    @GetMapping(value = "/get/5/type/region")
+    public ResponseEntity<List<ArticleDTO>> getLast5ByTypeAndRegion(@PathVariable("articleTypeId") Integer articleTypeId,
+                                                                    @PathVariable("regionId") String regionId) {
+        return ResponseEntity.ok(articleService.getLast5ByTypeAndRegion(articleTypeId, regionId));
+    }
+
+    @GetMapping(value = "/pagination/category")
+    public ResponseEntity<PageImpl<ArticleDTO>> paginationByCategory(@RequestParam(value = "page", defaultValue = "1") int page,
+                                                                 @RequestParam(value = "size", defaultValue = "10") int size,
+                                                                 @RequestParam(value = "level") Integer category) {
+        PageImpl<ArticleDTO> response = articleService.articlePaginationByCategory(category, page - 1, size);
+        return ResponseEntity.ok(response);
+    }
 }
