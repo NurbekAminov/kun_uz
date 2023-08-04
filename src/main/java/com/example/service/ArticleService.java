@@ -9,7 +9,6 @@ import com.example.mapper.ArticleShortInfoIMapper;
 import com.example.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -171,7 +170,7 @@ public class ArticleService {
 
         return dtoList;
     }
-    public List<ArticleDTO> getLast5ByTypeAndRegion(Integer articleTypeId, String regionId) {
+    public List<ArticleDTO> getLast5ByTypeAndRegion(Integer articleTypeId, Integer regionId) {
         List<ArticleShortInfoIMapper> list = articleRepository.getLast5ByArticleTypeIdAndRegionId(articleTypeId, regionId);
         List<ArticleDTO> dtoList = new LinkedList<>();
 

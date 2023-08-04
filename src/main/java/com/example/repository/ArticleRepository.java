@@ -72,5 +72,5 @@ public interface ArticleRepository extends CrudRepository<ArticleEntity, String>
             " where at.articleTypeId =:articleTypeId and a.regionId =:regionId and a.visible = true " +
             " order by a.publishedDate desc limit 5 ")
     List<ArticleShortInfoIMapper> getLast5ByArticleTypeIdAndRegionId(@Param("articleTypeId") Integer articleTypeId,
-                                                                     @Param("regionId") String regionId);
+                                                                     @Param("regionId") Integer regionId);
 }
