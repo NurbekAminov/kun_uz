@@ -30,9 +30,9 @@ public interface ArticleRepository extends CrudRepository<ArticleEntity, String>
                    @Param("description") String description,
                    @Param("content") String content,
                    @Param("sharedCount") Integer shared_count,
-                   @Param("imageId") String image_id,
-                   @Param("regionId") Integer region_id,
-                   @Param("categoryId") Integer category_id);
+                   @Param("imageId") String imageId,
+                   @Param("regionId") Integer regionId,
+                   @Param("categoryId") Integer categoryId);
 
     /*@Query("from ArticleEntity as a " +
             " inner join a.articleTypeSet as at" +
@@ -52,7 +52,7 @@ public interface ArticleRepository extends CrudRepository<ArticleEntity, String>
     @Query(value = "select a.id, a.title, a.description, a.image_id, a.published_date from article as a " +
             " where a.id NOT IN (:articleList)  and a.status ='PUBLISHED' and a.visible = true " +
             " order by a.published_date desc limit :limit", nativeQuery = true)
-    List<ArticleShortInfoIMapper> getLast8ArticleNotExistInListNative(@Param("articleList") List<Integer> articleList,
+    List<ArticleShortInfoIMapper> getLast8ArticleNotExistInListNative(@Param("articleList") List<String> articleList,
                                                                        @Param("limit") int limit);
     //9. Get Last 4 Article By Types and except given article id.
     @Query("from ArticleEntity as a " +

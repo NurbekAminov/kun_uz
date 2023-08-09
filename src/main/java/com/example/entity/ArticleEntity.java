@@ -27,6 +27,9 @@ public class ArticleEntity extends StringBaseEntity {
     @Column(name = "shared_count")
     private Integer sharedCount = 0;
 
+    @Column(name = "view_count")
+    private Integer viewCount = 0;
+
     @Column(name = "image_id", nullable = false)
     private String imageId;
     @OneToOne(fetch = FetchType.LAZY)
@@ -64,9 +67,6 @@ public class ArticleEntity extends StringBaseEntity {
 
     @Column(name = "published_date")
     private LocalDateTime publishedDate;
-
-    @Column(name = "view_count")
-    private Integer viewCount;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "article")
     private Set<ArticleTypesEntity> articleTypeSet;

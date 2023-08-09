@@ -23,4 +23,7 @@ public class CategoryEntity extends SequencesBaseEntity {
 
     @Column(name = "name_en")
     private String nameEn;
+
+    @Column(name = "prt_id")
+    private Integer prtId;
 }

@@ -44,6 +44,7 @@ public class MailSenderService {
     }
 
     public void sendEmailVerification(String toAccount, String name, Integer id) {
+        // TODO THREAD
         String jwt = JWTUtil.encodeEmailJwt(id);
         String url = serverUrl + "/api/v1/auth/verification/email/" + jwt;
 

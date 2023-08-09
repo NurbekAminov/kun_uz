@@ -5,7 +5,6 @@ import com.example.dto.ProfileDTO;
 import com.example.enums.ProfileRole;
 import com.example.service.ProfileService;
 import com.example.util.SecurityUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/profile")
+@RequestMapping("/api/v1/profile")
 public class ProfileController {
     @Autowired
     private ProfileService profileService;
@@ -21,7 +20,7 @@ public class ProfileController {
     @PostMapping(value = {"", "/"})
     public ResponseEntity<?> create(@RequestBody ProfileDTO dto,
                                     @RequestHeader("Authorization") String authToken) {
-        JwtDTO jwtDTO = SecurityUtil.hasRole(authToken, ProfileRole.ADMIN);
+        JwtDTO jwtDTO = SecurityUtil.hasRole(authToken, ProfileRole.ROLE_ADMIN);
         return ResponseEntity.ok(profileService.create(dto, jwtDTO.getId()));
     }
 
@@ -29,7 +28,7 @@ public class ProfileController {
     public ResponseEntity<Boolean> update(@RequestBody ProfileDTO dto,
                                           @PathVariable("id") Integer id,
                                           @RequestHeader("Authorization") String authToken) {
-        SecurityUtil.hasRole(authToken, ProfileRole.ADMIN);
+        JwtDTO jwtDTO = SecurityUtil.hasRole(authToken, ProfileRole.ROLE_ADMIN);
         return ResponseEntity.ok(profileService.update(id, dto));
     }
     @PutMapping(value = "/detail")
@@ -40,13 +39,13 @@ public class ProfileController {
     }
     @GetMapping(value = "")
     public ResponseEntity<List<ProfileDTO>> getAll(@RequestHeader("Authorization") String authToken) {
-        SecurityUtil.hasRole(authToken, ProfileRole.ADMIN);
+        JwtDTO jwtDTO = SecurityUtil.hasRole(authToken, ProfileRole.ROLE_ADMIN);
         return ResponseEntity.ok(profileService.getList());
     }
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable("id") Integer id,
                                           @RequestHeader("Authorization") String authToken) {
-        SecurityUtil.hasRole(authToken, ProfileRole.ADMIN);
+        JwtDTO jwtDTO = SecurityUtil.hasRole(authToken, ProfileRole.ROLE_ADMIN);
         return ResponseEntity.ok(profileService.delete(id));
     }
 

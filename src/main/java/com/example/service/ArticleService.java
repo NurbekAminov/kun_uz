@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class ArticleService {
+    @Autowired
     private ArticleRepository articleRepository;
     @Autowired
     private RegionService regionService;
@@ -27,18 +28,19 @@ public class ArticleService {
 
 
     public ArticleDTO create(ArticleDTO dto, Integer moderatorId) {
+        // check
         ArticleEntity entity = new ArticleEntity();
         entity.setTitle(dto.getTitle());
-        entity.setDescription(dto.getDescription());
         entity.setContent(dto.getContent());
-        entity.setSharedCount(dto.getSharedCount());
+        entity.setDescription(dto.getDescription());
         entity.setImageId(dto.getImageId());
         entity.setRegionId(dto.getRegionId());
         entity.setCategoryId(dto.getCategoryId());
+        entity.setModeratorId(moderatorId);
         entity.setStatus(ArticleStatus.NOT_PUBLISHED);
-
-        articleRepository.save(entity);
-        articleTypesService.create(entity.getId(), dto.getArticleType());
+        articleRepository.save(entity); // save
+        articleTypesService.create(entity.getId(), dto.getArticleType()); // save type list
+        // response
         dto.setId(entity.getId());
         dto.setCreatedDate(entity.getCreatedDate());
         return dto;
@@ -63,6 +65,19 @@ public class ArticleService {
         return dto;
     }
 
+    public ArticleDTO getById(String articleId, Language language) {
+        ArticleEntity entity = get(articleId);
+        ArticleDTO dto = new ArticleDTO();
+        dto.setId(entity.getId());
+        dto.setTitle(entity.getTitle());
+        dto.setDescription(entity.getDescription());
+        dto.setContent(entity.getContent());
+        // dto.setImageId(entity.getImageId());
+        dto.setRegion(regionService.getById(entity.getRegionId(), language));
+        //
+        return dto;
+    }
+
     public Boolean delete(String id, Integer moderatorId) {
         // TODO
         articleRepository.deleteById(id);
@@ -77,23 +92,11 @@ public class ArticleService {
         if (status == ArticleStatus.NOT_PUBLISHED){
             entity.setStatus(ArticleStatus.NOT_PUBLISHED);
         }
+        entity.setPublisherId(publisherId);
         articleRepository.save(entity);
         articleTypesService.merge(entity.getId(), dto.getArticleType());
         dto.setId(entity.getId());
         dto.setCreatedDate(entity.getCreatedDate());
-        return dto;
-    }
-
-    public ArticleDTO getById(String articleId, Language language) {
-        ArticleEntity entity = get(articleId);
-        ArticleDTO dto = new ArticleDTO();
-        dto.setId(entity.getId());
-        dto.setTitle(entity.getTitle());
-        dto.setDescription(entity.getDescription());
-        dto.setContent(entity.getContent());
-        // dto.setImageId(entity.getImageId());
-        dto.setRegion(regionService.getById(entity.getRegionId(), language));
-        //
         return dto;
     }
 
@@ -115,7 +118,7 @@ public class ArticleService {
 
         return dtoList;
     }
-    public List<ArticleDTO> getLast8(List<Integer> list) {
+    public List<ArticleDTO> getLast8(List<String> list) {
         List<ArticleShortInfoIMapper> list1 = articleRepository.getLast8ArticleNotExistInListNative(list, 8);
         List<ArticleDTO> dtoList = new LinkedList<>();
 

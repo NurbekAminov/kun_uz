@@ -27,11 +27,10 @@ import java.util.UUID;
 
 @Service
 public class AttachService {
-    @Value("${attach.url}")
-    private String attachUrl;
-
     @Value("${attach.folder.name}")
     private String folderName;
+    @Value("${attach.url}")
+    private String attachUrl;
     private AttachRepository attachRepository;
     public String saveToSystem(MultipartFile file) {
 //        System.out.println(file.getSize());
@@ -60,32 +59,6 @@ public class AttachService {
         dto.setId(id);
         dto.setUrl(getUrl(id));
         return dto;
-    }
-    public byte[] loadImage(String fileName) {
-        try {
-            BufferedImage originalImage = ImageIO.read(new File("attaches/" + fileName));
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(originalImage, "png", baos);
-
-            baos.flush();
-            byte[] imageInByte = baos.toByteArray();
-            baos.close();
-            return imageInByte;
-        } catch (Exception e) {
-            return new byte[0];
-        }
-    }
-    public String getYmDString() {
-        int year = Calendar.getInstance().get(Calendar.YEAR);
-        int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
-        int day = Calendar.getInstance().get(Calendar.DATE);
-
-        return year + "/" + month + "/" + day; // 2022/04/23
-    }
-    public String getExtension(String fileName) { // mp3/jpg/npg/mp4.....
-        int lastIndex = fileName.lastIndexOf(".");
-        return fileName.substring(lastIndex + 1);
     }
     public AttachDTO save(MultipartFile file) {
         String pathFolder = getYmDString(); // 2022/04/23
@@ -121,8 +94,52 @@ public class AttachService {
             throw new RuntimeException(e);
         }
     }
-    public String getUrl(String id) {
-        return attachUrl + "/open/" + id + "/img";
+    public byte[] loadImage(String fileName) {
+        try {
+            BufferedImage originalImage = ImageIO.read(new File("attaches/" + fileName));
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(originalImage, "png", baos);
+
+            baos.flush();
+            byte[] imageInByte = baos.toByteArray();
+            baos.close();
+            return imageInByte;
+        } catch (Exception e) {
+            return new byte[0];
+        }
+    }
+    public byte[] loadImageById(String id) {
+        AttachEntity entity = get(id);
+        try {
+            String url = folderName + "/" + entity.getPath() + "/" + id + "." + entity.getExtension();
+            BufferedImage originalImage = ImageIO.read(new File(url));
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(originalImage, entity.getExtension(), baos);
+            baos.flush();
+            byte[] imageInByte = baos.toByteArray();
+            baos.close();
+            return imageInByte;
+        } catch (Exception e) {
+            return new byte[0];
+        }
+    }
+    public byte[] loadByIdGeneral(String id) {
+        AttachEntity entity = get(id);
+        try {
+            String url = folderName + "/" + entity.getPath() + "/" + id + "." + entity.getExtension();
+            File file = new File(url);
+
+            byte[] bytes = new byte[(int) file.length()];
+
+            FileInputStream fileInputStream = new FileInputStream(file);
+            fileInputStream.read(bytes);
+            fileInputStream.close();
+            return bytes;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new byte[0];
+        }
     }
     public ResponseEntity<Resource> download(String id) {
         AttachEntity entity = get(id);
@@ -142,41 +159,23 @@ public class AttachService {
             throw new RuntimeException("Error: " + e.getMessage());
         }
     }
-    public byte[] loadImageById(String id) {
-        AttachEntity entity = get(id);
-        try {
-            String url = folderName + "/" + entity.getPath() + "/" + id + "." + entity.getExtension();
-            BufferedImage originalImage = ImageIO.read(new File(url));
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(originalImage, entity.getExtension(), baos);
-            baos.flush();
-            byte[] imageInByte = baos.toByteArray();
-            baos.close();
-            return imageInByte;
-        } catch (Exception e) {
-            return new byte[0];
-        }
-    }
     public AttachEntity get(String id) {
         return attachRepository.findById(id).orElseThrow(() -> {
             throw new AppBadRequestException("File not found");
         });
     }
-    public byte[] loadByIdGeneral(String id) {
-        AttachEntity entity = get(id);
-        try {
-            String url = folderName + "/" + entity.getPath() + "/" + id + "." + entity.getExtension();
-            File file = new File(url);
+    public String getYmDString() {
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
+        int day = Calendar.getInstance().get(Calendar.DATE);
 
-            byte[] bytes = new byte[(int) file.length()];
-
-            FileInputStream fileInputStream = new FileInputStream(file);
-            fileInputStream.read(bytes);
-            fileInputStream.close();
-            return bytes;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new byte[0];
-        }
+        return year + "/" + month + "/" + day; // 2022/04/23
+    }
+    public String getExtension(String fileName) { // mp3/jpg/npg/mp4.....
+        int lastIndex = fileName.lastIndexOf(".");
+        return fileName.substring(lastIndex + 1);
+    }
+    public String getUrl(String id) {
+        return attachUrl + "/open/" + id + "/img";
     }
 }

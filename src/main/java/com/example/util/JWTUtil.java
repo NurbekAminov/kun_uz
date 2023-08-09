@@ -32,12 +32,12 @@ public class JWTUtil {
 
             Claims claims = jws.getBody();
 
-            Integer id = (Integer) claims.get("id");
+            String phone = (String) claims.get("phone");
 
             String role = (String) claims.get("role");
             ProfileRole profileRole = ProfileRole.valueOf(role);
 
-            return new JwtDTO(id, profileRole);
+            return new JwtDTO(phone, profileRole);
         } catch (JwtException e){
             throw new UnAuthorizedException("Your session expired");
         }

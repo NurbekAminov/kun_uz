@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.dto.AttachDTO;
 import com.example.service.AttachService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -15,22 +16,25 @@ public class AttachController {
     private AttachService attachService;
 
     @PostMapping("/upload")
-    public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file) {
-        String fileName = attachService.saveToSystem(file);
-        return ResponseEntity.ok().body(fileName);
+    public ResponseEntity<AttachDTO> upload(@RequestParam("file") MultipartFile file) {
+        return ResponseEntity.ok().body(attachService.save(file));
     }
+
     @GetMapping(value = "/open/{fileName}", produces = MediaType.IMAGE_PNG_VALUE)
     public byte[] open(@PathVariable("fileName") String fileName) {
-        return this.attachService.loadImage(fileName);
+        return attachService.loadImage(fileName);
     }
+
     @GetMapping(value = "/open/{id}/img", produces = MediaType.IMAGE_PNG_VALUE)
     public byte[] openImageById(@PathVariable("id") String id) {
         return attachService.loadImageById(id);
     }
+
     @GetMapping(value = "/open/{id}/general", produces = MediaType.ALL_VALUE)
     public byte[] openByIdGeneral(@PathVariable("id") String id) {
         return attachService.loadByIdGeneral(id);
     }
+
     @GetMapping("/download/{id}")
     public ResponseEntity<Resource> download(@PathVariable("id") String id) {
         return attachService.download(id);
